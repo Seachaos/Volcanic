@@ -1,0 +1,2 @@
+class ApiListController < ApplicationController
+end
