@@ -1,0 +1,5 @@
+<%=link_to 'Create API', controller:'api_list', action:'create' %>
+
+<ul><% @datas.each do |data| %>
+	<li><%=data.name%></li>
+<% end %></ul>

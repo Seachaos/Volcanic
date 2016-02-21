@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   match 'test/*other' => 'test#index', :via => :all
 
   get 'api_list' => 'api_list#index'
+  get 'api_list/create' => 'api_list#create'
+  post 'api_list/create' => 'api_list#create'
+
   get 'log' => 'log#index'
 
   # Example of regular route:

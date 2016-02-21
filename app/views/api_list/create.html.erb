@@ -1,0 +1,15 @@
+<% if flash[:msgHas] then %>
+	<%=flash[:msgContent]%>
+<% end %>
+<%=form_tag(action:'create' ) do %>
+	<div id="form_content">
+	</div>
+	<%=submit_tag 'Submit' %>
+<% end %>
+
+<script type="text/javascript">
+ReactDOM.render(
+	React.createElement(APIListCreateForm, null),
+	document.getElementById('form_content')
+);
+</script>
