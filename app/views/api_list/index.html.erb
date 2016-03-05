@@ -1,5 +1,24 @@
-<%=link_to 'Create API', controller:'api_list', action:'create' %>
 
-<ul><% @datas.each do |data| %>
-	<li><%=data.name%></li>
-<% end %></ul>
+<!-- <a href="<%=url_for controller:'api_list', action:'create' %>" class="btn btn-default" >Create Request</a> -->
+<a href="<%=url_for controller:'api_list', action:'create' %>" class="btn btn-default" >Create Response</a>
+
+
+<div id="ListView" style="margin-top:50px;">
+</div>
+
+<script type="text/javascript">
+var array = []
+array.push({
+	header: true,
+	labels:['Name', 'URL', 'Action']
+})
+<% @datas.each do |data| %>
+	array.push(<%=data.to_json.html_safe%>)
+<% end %>
+
+React.render(
+	React.createElement(ApiListTableView, {
+		datas : array
+	}),
+	document.getElementById('ListView') );
+</script>

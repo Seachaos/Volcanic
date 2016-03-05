@@ -4,6 +4,7 @@ class CreateDataResponses < ActiveRecord::Migration
       t.string :name
       t.string :value
       t.string :response
+      t.string :response_type
       t.string :path
       t.string :type
       t.timestamps null: false

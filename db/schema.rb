@@ -11,13 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160220100717) do
+ActiveRecord::Schema.define(version: 20160305055714) do
 
   create_table "data_responses", force: :cascade do |t|
     t.string   "name"
     t.string   "value"
     t.string   "response"
+    t.string   "response_type"
     t.string   "path"
+    t.string   "type"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  create_table "request_tasks", force: :cascade do |t|
+    t.string   "name"
+    t.string   "url"
+    t.string   "method"
     t.string   "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

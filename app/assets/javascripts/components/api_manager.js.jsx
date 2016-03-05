@@ -18,7 +18,7 @@ var APIListCreateForm = React.createClass({
 		return (<div>
 			<APIListInput cname="Name" name="name" />
 			<APIListInput cname="Path" name="path" />
-			<textarea className="form-control" rows="3" placeholder="Response"></textarea>
+			<textarea className="form-control" rows="3" placeholder="Response" name="post[response]" ></textarea>
 		</div>)
 	}
 });

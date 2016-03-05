@@ -8,12 +8,10 @@ Rails.application.routes.draw do
   match 'test' => 'test#index', :via => :all
   match 'ring' => 'test#index', :via => :all
   match 'test/*other' => 'test#index', :via => :all
+  match 'api/test/*other' => 'api_list#test', :via => :all
 
-  get 'api_list' => 'api_list#index'
-  get 'api_list/create' => 'api_list#create'
-  post 'api_list/create' => 'api_list#create'
-
-  get 'log' => 'log#index'
+  get ':controller(/:action(/:id(/:tag)))(.:format)'
+  post ':controller(/:action(/:id(/:tag)))(.:format)'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

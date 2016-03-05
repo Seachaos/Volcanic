@@ -2,6 +2,14 @@ class ApiListController < ApplicationController
 
 	def index
 		@datas = DataResponse.all
+		@datas.each do |data|
+			data.path = root_url + 'test/' + data.path
+		end
+	end
+
+	def list_request
+		@datas = RequestTask.all
+		render :action => :index
 	end
 
 	def create
@@ -10,7 +18,7 @@ class ApiListController < ApplicationController
 		logger.info 'From POST:'
 		logger.info params[:post].to_s
 
-		data = DataResponse.new(params.require(:post).permit(:name, :path))
+		data = DataResponse.new(params.require(:post).permit(:name, :path, :response))
 
 		flash[:msgHas] = true
 		if !(data.name.nil?) and data.save then
@@ -20,5 +28,9 @@ class ApiListController < ApplicationController
 			flash[:msgContent] = 'Failed'
 			flash[:msgType] = :failed
 		end
+	end
+
+	def test
+		TestController.RenderResponse(self, params)
 	end
 end

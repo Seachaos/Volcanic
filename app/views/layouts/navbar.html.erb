@@ -5,9 +5,14 @@ def current_controller?(c)
 end
 
 def makeMenu(json)
+  isActive = current_controller?(json[:controller])
+  if isActive then
+    isActive = (controller.action_name.to_s == json[:action].to_s)
+  end
+  url = url_for :controller=>json[:controller], :action=>json[:action]
   %>
-  <li <%='class="active"'.html_safe if current_controller?(json[:controller])%> >
-    <a href="<%=url_for :controller=>json[:controller] %>" ><%=json[:name]%></a>
+  <li <%='class="active"'.html_safe if isActive%> >
+    <a href="<%=url%>" ><%=json[:name]%></a>
   </li>
   <%
 end
@@ -26,7 +31,8 @@ end
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
       <% makeMenu :controller=>:home, :name=>'Home' %>
-      <% makeMenu :controller=>:api_list, :name=>'API List' %>
+      <% makeMenu :controller=>:api_list, :action=>:index, :name=>'API Response List' %>
+      <% makeMenu :controller=>:api_list, :action=>:list_request, :name=>'API Request List' %>
       <% makeMenu :controller=>:log, :name=>'Log' %>
       <!-- <li><a href="#">Contact</a></li>
       <li class="dropdown">
