@@ -12,18 +12,38 @@ class ApiListController < ApplicationController
 		render :action => :index
 	end
 
+	def edit
+		if params[:id] then
+			data = DataResponse.find_by_id(params[:id])
+			unless data then
+				redirect_to :action=>'index'
+				return
+			end
+		end
+		@data = data
+		render :action=>'create'
+	end
+
 	def create
-		return if params.nil? or params[:post].nil?
+		@data = DataResponse.new
+		return if params.nil? or params[:data_response].nil?
 
-		logger.info 'From POST:'
-		logger.info params[:post].to_s
-
-		data = DataResponse.new(params.require(:post).permit(:name, :path, :response))
+		if params[:id] then
+			data = DataResponse.find_by_id(params[:id])
+			unless data then
+				redirect_to :action=>'index'
+				return
+			end
+			data.update(dataResponseFromParams)
+		else
+			data = DataResponse.new(dataResponseFromParams)
+		end
+		@data = data
 
 		flash[:msgHas] = true
 		if !(data.name.nil?) and data.save then
-			flash[:msgContent] = 'Success'
-			flash[:msgType] = :success
+			redirect_to :action=>'index'
+			return
 		else
 			flash[:msgContent] = 'Failed'
 			flash[:msgType] = :failed
@@ -32,5 +52,10 @@ class ApiListController < ApplicationController
 
 	def test
 		TestController.RenderResponse(self, params)
+	end
+
+private
+	def dataResponseFromParams
+		params.require(:data_response).permit(:name, :path, :response)
 	end
 end
