@@ -1,28 +1,56 @@
 require 'rails_helper'
 
+
 RSpec.describe ApiListController, type: :controller do
+
+	let(:createAPIListParams){
+		return {
+			:data_response => {
+				:name => 'Name_TEST',
+				:path => 'here_is_path',
+				:response => 'RESPONSE'
+			}
+		}
+	}
 
 	describe "Create" do
 		before(:each) do
-			post :create, {
-				:post => {
-					:name => 'Name_TEST',
-					:path => 'here_is_path',
-					:response => 'RESPONSE'
-				}
-			}
+			post :create, createAPIListParams
 		end
 
 		context "when post" do
 			it "has response" do
-				expect(response).to have_http_status(:success)
+				# expect(response).to have_http_status(:success)
+				expect(response).to redirect_to :action=>:index
 				expect(response.body).not_to be_nil
 			end
 			it "has data" do
 				data = DataResponse.where('name=?', 'Name_TEST').first
 				expect(data).not_to be_nil
+				expect(data.id).to be >= 1
 				expect(data.response).to eq('RESPONSE')
 			end
+		end
+	end
+
+	describe "Edit and Delete" do
+		let(:data_id){
+			data = DataResponse.where('name=?', 'Name_TEST').first
+			expect(data).not_to be_nil
+			expect(data.id).to be >= 1
+		}
+		before(:each) do
+			post :create, createAPIListParams
+		end
+
+		it "can modify" do
+			params = createAPIListParams
+			params[:data_response][:name] = 'I_Modify'
+			params[:id] = data_id
+			post :create, params
+			data = DataResponse.where('name=?', 'I_Modify').first
+			expect(data).not_to be_nil
+			expect(data.id).to be >= 1
 		end
 	end
 
@@ -33,7 +61,7 @@ RSpec.describe ApiListController, type: :controller do
 		context "JSON" do
 			before(:each) do
 				post :create, {
-					:post => {
+					:data_response => {
 						:name => name,
 						:path => path,
 						:response => '{"aa":"bb","cc":"dd"}'
@@ -66,7 +94,7 @@ RSpec.describe ApiListController, type: :controller do
 		context "HTML" do
 			before(:each) do
 				post :create, {
-					:post => {
+					:data_response => {
 						:name => name,
 						:path => path,
 						:response => '<h1>Here is HTML</h1>'

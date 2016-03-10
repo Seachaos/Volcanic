@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   match 'ring' => 'test#index', :via => :all
   match 'test/*other' => 'test#index', :via => :all
   match 'api/test/*other' => 'api_list#test', :via => :all
+  
+  match ':controller(/:action(/:id(/:tag)))(.:format)', :via=>:all
 
   get ':controller(/:action(/:id(/:tag)))(.:format)'
   post ':controller(/:action(/:id(/:tag)))(.:format)'
