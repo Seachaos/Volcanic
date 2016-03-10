@@ -1,5 +1,5 @@
 language: ruby
-rmv:
+rvm:
   - 2.2.1
 
 env:
