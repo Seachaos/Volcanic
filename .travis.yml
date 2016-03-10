@@ -1,6 +1,6 @@
 language: ruby
 rmv:
-  - 2.2
+  - 2.2.1
 
 env:
   - DB=sqlite
@@ -9,7 +9,8 @@ gemfile:
   - Gemfile
 
 script:
-  - RAILS_ENV=test bundle exec rake db:migrate --trace
+#  - RAILS_ENV=test bundle exec rake db:migrate --trace
+  - bundle install --jobs=3 --retry=3 --deployment
   - bundle exec rake db:test:prepare
   - bundle exec rake
   - bundle exec rspec spec
