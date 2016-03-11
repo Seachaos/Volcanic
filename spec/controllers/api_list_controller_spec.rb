@@ -12,10 +12,18 @@ RSpec.describe ApiListController, type: :controller do
 			}
 		}
 	}
+	let(:userAdmin){
+		user = User.new
+		user.isAdmin = true
+		return user
+	}
+	let(:session){
+
+	}
 
 	describe "Create" do
 		before(:each) do
-			post :create, createAPIListParams
+			post :create, createAPIListParams, session
 		end
 
 		context "when post" do
@@ -40,7 +48,7 @@ RSpec.describe ApiListController, type: :controller do
 			expect(data.id).to be >= 1
 		}
 		before(:each) do
-			post :create, createAPIListParams
+			post :create, createAPIListParams, session
 		end
 
 		it "can modify" do
@@ -66,7 +74,7 @@ RSpec.describe ApiListController, type: :controller do
 						:path => path,
 						:response => '{"aa":"bb","cc":"dd"}'
 					}
-				}
+				}, session
 
 				post :test, {
 					:other => path
@@ -99,7 +107,7 @@ RSpec.describe ApiListController, type: :controller do
 						:path => path,
 						:response => '<h1>Here is HTML</h1>'
 					}
-				}
+				}, session
 
 				post :test, {
 					:other => path

@@ -34,6 +34,11 @@ end
       <% makeMenu :controller=>:api_list, :action=>:index, :name=>'API Response List' %>
       <% makeMenu :controller=>:api_list, :action=>:list_request, :name=>'API Request List' %>
       <% makeMenu :controller=>:log, :name=>'Log' %>
+      <% if @isLogin then %>
+        <% makeMenu :controller=>:user, :action=>:logout, :name=>'Logout' %>
+      <% else %>
+        <% makeMenu :controller=>:user, :action=>:login, :name=>'Login' %>
+      <% end %>
       <!-- <li><a href="#">Contact</a></li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>

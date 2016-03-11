@@ -1,5 +1,7 @@
 class ApiListController < ApplicationController
 
+	before_filter :require_admin
+
 	def index
 		@datas = DataResponse.all
 		@datas.each do |data|
