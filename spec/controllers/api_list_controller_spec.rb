@@ -14,11 +14,17 @@ RSpec.describe ApiListController, type: :controller do
 	}
 	let(:userAdmin){
 		user = User.new
-		user.isAdmin = true
+		user.account = 'testAdminAccount'
+		user.password = 'testPassword'
+		user.permission = 'admin'
+		expect(user.save).to be true
 		return user
 	}
 	let(:session){
-
+		return {
+			:isLogin => true,
+			:user_id => userAdmin.id
+		}
 	}
 
 	describe "Create" do
