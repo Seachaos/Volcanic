@@ -26,11 +26,26 @@ class ApiListController < ApplicationController
 		render :action=>'create'
 	end
 
+	def copy
+		if params[:id] then
+			data = DataResponse.find_by_id(params[:id])
+			unless data then
+				redirect_to :action=>'index'
+				return
+			end
+			data = DataResponse.new(data.attributes)
+			data.id = nil
+			@isCopy = true
+		end
+		@data = data
+		render :action=>'create'
+	end
+
 	def create
 		@data = DataResponse.new
 		return if params.nil? or params[:data_response].nil?
 
-		if params[:id] then
+		if params[:id].present? then
 			data = DataResponse.find_by_id(params[:id])
 			unless data then
 				redirect_to :action=>'index'

@@ -1,4 +1,7 @@
 class TestController < ApplicationController
+	
+	protect_from_forgery :except => [:index]
+
 	def index
 		TestController.RenderResponse(self, params)
 	end

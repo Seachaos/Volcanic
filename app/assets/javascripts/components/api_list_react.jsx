@@ -6,10 +6,11 @@ var ApiListActionButton = React.createClass({
 		var data = this.props.data;
 		var url = data.path;
 		var url_edit = root_url + 'api_list/edit/'+ data.id
+		var url_copy = root_url + 'api_list/copy/'+ data.id
 		
 		return (<div className="btn-group" >
 			<a href={url} className="btn btn-default" target="_blank" >{name}</a>
-			<a href="" className="btn btn-default" disabled="disabled" >Copy</a>
+			<a href={url_copy} className="btn btn-default" >Copy</a>
 			<a href={url_edit} className="btn btn-default" >Edit</a>
 			<a href="" className="btn btn-default" disabled="disabled" >Delete</a>
 		</div>)

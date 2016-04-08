@@ -30,3 +30,17 @@
 		color:#FCA;
 	}
 }
+
+#navbar{
+	.navbar-nav{
+		a{
+			color:#CCA;
+		}
+		.active{
+			a{
+				background:#CA9996;
+				color:#FFF;
+			}
+		}
+	}
+}
