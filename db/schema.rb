@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160311052942) do
+ActiveRecord::Schema.define(version: 20160410173928) do
 
   create_table "data_responses", force: :cascade do |t|
     t.string   "name"
@@ -22,6 +22,16 @@ ActiveRecord::Schema.define(version: 20160311052942) do
     t.string   "type"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+  end
+
+  create_table "log_data", force: :cascade do |t|
+    t.string   "log_type"
+    t.string   "tag"
+    t.string   "msg"
+    t.string   "path"
+    t.string   "raw"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "request_tasks", force: :cascade do |t|

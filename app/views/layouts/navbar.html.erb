@@ -7,7 +7,7 @@ end
 def makeMenu(json)
   isActive = current_controller?(json[:controller])
   if isActive then
-    isActive = (controller.action_name.to_s == json[:action].to_s)
+    isActive = (controller.action_name.to_s == json[:action].to_s) if json[:action].present?
   end
   url = url_for :controller=>json[:controller], :action=>json[:action]
   %>

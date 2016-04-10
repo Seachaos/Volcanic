@@ -1,0 +1,19 @@
+<%=render :template=>'layouts/message' %>
+<table class="table table-striped table-hover" >
+	<thead><tr>
+		<th>ID</th>
+		<th>TYPE</th>
+		<th>TAG</th>
+		<th>PATH</th>
+		<th>RAW</th>
+	</tr></thead>
+	<% @logData.each do |log| %>
+	<tr>
+		<td><%=log.id%></td>
+		<td><%=log.log_type%></td>
+		<td><%=log.tag%></td>
+		<td><%=log.path%></td>
+		<td><%=log.raw%></td>
+	</tr>
+	<% end %>
+</table>
