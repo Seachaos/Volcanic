@@ -1,12 +1,25 @@
 
 <%=render :template=>'layouts/message' %>
 <!-- <a href="<%=url_for controller:'api_list', action:'create' %>" class="btn btn-default" >Create Request</a> -->
+
 <a href="<%=url_for controller:'api_list', action:'create' %>" class="btn btn-default" >Create Response</a>
+<div style="float:right;" >
+	<a href="<%=url_for controller:'api_list', action:'export_all' %>" class="btn btn-default" >Export All</a>
+	<a class="btn btn-default"  id="btn_import" >Import</a>
+</div>
 
 
 <div id="ListView" style="margin-top:50px;">
 </div>
 
+
+<div id="upload_form" style="display:none;" >
+	<form action="<%=url_for controller:'api_list', action:'import' %>" method="post" enctype="multipart/form-data"  >
+		<input type="hidden" name="<%=request_forgery_protection_token.to_s%>" value="<%= form_authenticity_token %>" />
+		<input type="file" name="data_response_file" />
+		<input type="submit" />
+	</form>
+</div>
 <script type="text/javascript">
 var root_url = "<%=root_url%>";
 var array = []
@@ -23,4 +36,9 @@ React.render(
 		datas : array
 	}),
 	document.getElementById('ListView') );
+
+
+$('#btn_import').click(function(){
+	$.facebox($('#upload_form').html());
+});
 </script>

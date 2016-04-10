@@ -73,12 +73,34 @@ class ApiListController < ApplicationController
 		end
 	end
 
+	def import
+		begin
+			file = params[:data_response_file]
+			content = File.read(file.path)	
+			if DataResponse.import(content) then
+				flash[:msg] = 'Import Success'
+			else
+				flash[:emsg] = 'Import Failed'
+			end
+		rescue => e
+			flash[:emsg] = 'Import file failed'
+		end
+		redirect_to :action=>:index
+	end
+
+	def export_all
+		data = DataResponse.exportAll
+		send_data data,
+			:disposition => "attachment; filename=DataResponse.json",
+			:x_sendfile => true
+	end
+
 	def test
 		TestController.RenderResponse(self, params)
 	end
 
 private
 	def dataResponseFromParams
-		params.require(:data_response).permit(:name, :path, :response)
+		DataResponse.fromParams(params.require(:data_response))
 	end
 end

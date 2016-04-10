@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe DataResponse, type: :model do
-	# pending "add some examples to (or delete) #{__FILE__}"
-
 	describe "DB test." do
 		let(:name){ 'TestName' }
 
@@ -42,6 +40,37 @@ RSpec.describe DataResponse, type: :model do
 			data = { 'aa':'bb', 'cc':'dd'}
 			resp = DataResponse.postGetJson(url,data)
 			expect(resp).not_to be false
+		end
+	end
+
+	describe "Export/Import" do
+		before(:each) do
+			for i in 0...10
+				data = DataResponse.new
+				data.path = i.to_s + '_path'
+				data.name = i.to_s + '_name'
+				expect(data.save).to be true
+			end
+		end
+		it "export success" do
+			export = DataResponse.exportAll
+			expect(export.length).to be > 10
+			expect(export).to include '3_path'
+		end
+
+		it "import success" do
+			export = DataResponse.exportAll
+			DataResponse.all.each do |data|
+				data.delete
+			end
+			expect(DataResponse.all.size).to be == 0
+			expect(DataResponse.import(export)).to be true
+			for i in 0...10
+				path = i.to_s + '_path'
+				name = i.to_s + '_name'
+				data = DataResponse.where('name=? and path=?', name, path).first
+				expect(data.present?).to be true
+			end
 		end
 	end
 end

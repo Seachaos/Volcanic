@@ -7,4 +7,12 @@ if emsg.present? then %>
   <span class="sr-only">Error:</span>
   <%=emsg%>
 </div>
+<% end
+
+msg = flash[:msg]
+if msg.present? then %>
+<div class="alert alert-success" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <%=msg%>
+</div>
 <% end %>
