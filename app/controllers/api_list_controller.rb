@@ -9,11 +9,6 @@ class ApiListController < ApplicationController
 		end
 	end
 
-	def list_request
-		@datas = RequestTask.all
-		render :action => :index
-	end
-
 	def edit
 		if params[:id] then
 			data = DataResponse.find_by_id(params[:id])
@@ -23,6 +18,7 @@ class ApiListController < ApplicationController
 			end
 		end
 		@data = data
+		flash.now[:title] = 'Edit: ' + data.name
 		render :action=>'create'
 	end
 
@@ -38,11 +34,13 @@ class ApiListController < ApplicationController
 			@isCopy = true
 		end
 		@data = data
+		flash.now[:title] = 'Copy: ' + data.name
 		render :action=>'create'
 	end
 
 	def create
 		@data = DataResponse.new
+		flash.now[:title] = 'Create'
 		return if params.nil? or params[:data_response].nil?
 
 		if params[:id].present? then
@@ -57,13 +55,21 @@ class ApiListController < ApplicationController
 		end
 		@data = data
 
-		flash[:msgHas] = true
+		# check path duplicate
+		exists = DataResponse.where('path =? ', params[:data_response][:path])
+		if exists.present? then
+			unless exists.first.id == data.id then
+				flash.now[:emsg] = 'Path has exists.'
+				return;
+			end
+		end
+
 		if !(data.name.nil?) and data.save then
 			redirect_to :action=>'index'
 			return
 		else
-			flash[:msgContent] = 'Failed'
-			flash[:msgType] = :failed
+			flash.now[:emsg] = 'Save Failed'
+			return
 		end
 	end
 

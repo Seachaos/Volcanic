@@ -31,8 +31,8 @@ end
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
       <% makeMenu :controller=>:home, :name=>'Home' %>
-      <% makeMenu :controller=>:api_list, :action=>:index, :name=>'API Response List' %>
-      <% makeMenu :controller=>:api_list, :action=>:list_request, :name=>'API Request List' %>
+      <% makeMenu :controller=>:api_list, :name=>'API Response List' %>
+      <% makeMenu :controller=>:api_request, :name=>'API Request List' %>
       <% makeMenu :controller=>:log, :name=>'Log' %>
       <% if @isLogin then %>
         <% makeMenu :controller=>:user, :action=>:logout, :name=>'Logout' %>

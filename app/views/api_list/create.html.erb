@@ -1,6 +1,5 @@
-<% if flash[:msgHas] then %>
-	<%=flash[:msgContent]%>
-<% end %>
+<%=render :template=>'layouts/message' %>
+<h1><%=flash[:title]%></h1>
 <%=form_for @data, :url=>{ :action =>'create' } do |f| %>
 	<% if @data.id then %>
 		<input type="hidden" name="id" value="<%=@data.id%>" />
