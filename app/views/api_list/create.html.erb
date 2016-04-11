@@ -9,15 +9,92 @@
 	    <%= f.text_field :name, class: 'form-control' %>
 	</div>
 
-	<div className="form-group" >
+	<div className="form-group" style="margin-bottom:20px; padding-bottom:20px; border-bottom:1px #CCC solid;">
 		<%= f.label :path, "Path" %>
 	    <%= f.text_field :path, class: 'form-control' %>
 	</div>
 
-	<div className="form-group" >
-		<%= f.label :response, "Response" %>
-	    <%= f.text_area :response, class: 'form-control', rows:6 %>
+	<div id="response_type_control_bar"style="margin:10px;" >
+		Data Type：
+		<span  class="btn-group" role="group" >
+			<a class="btn btn-default btn_view_raw">Raw</a>
+			<a class="btn btn-default btn_view_json">JSON</a>
+		</span>
 	</div>
+	<div className="form-group" id="response_input_raw" style="display:none;" >
+		<%= f.label :response, "Response" %>
+	    <%= f.text_area :response, :id=>'input_raw',  class: 'form-control', rows:6 %>
+	</div>
+	<div id="react_json_content" ></div>
+	<%=f.hidden_field :type, :id=>'input_type' %>
 	<br />
 	<%=submit_tag 'Submit' %>
+
+	<script type="text/javascript">
+	function br(){
+		return React.createElement('br');
+	}
+	var JSONViewer = React.createClass({
+		getInitialState : function(){
+			return {
+				json : this.props.json
+			};
+		},
+		render: function(){
+			var createBtn = React.createElement('a', { className:'btn btn-default'}, 'Create');
+			if(Object.keys(this.state.json).length === 0){
+				return React.createElement('div', {}, "It's no data", br(), createBtn);
+			}
+			return React.createElement('div', {}, br(), createBtn);
+		}
+	});
+	</script>
+	<script type="text/javascript">
+	function isResponseIsJSON(){
+		var val = $('#input_raw').val();
+		if(val.trim().length<1){
+			return {};
+		}
+		try{
+			return JSON.parse(val);
+		}catch(e){
+			return false;
+		}
+	}
+	function switchResponseToJson(){
+		var json = isResponseIsJSON();
+		if(!json){
+			if(!confirm('Your response is not json format, this action will clear response to json.\nAre you sure?')){
+				return;
+			}
+			json = {};
+		}
+		$('#response_input_raw').fadeOut();
+		$('#response_type_control_bar').find('a').removeClass('active');
+		$('.btn_view_json').addClass('active');
+
+		// render in react
+		$('#react_json_content').empty();
+		$('#react_json_content').fadeIn();
+		var rdom = React.createElement(JSONViewer, {json: json});
+		ReactDOM.render(rdom, $('#react_json_content')[0]);
+	}
+	function switchResponseToText(){
+		$('#react_json_content').fadeOut();
+		$('#response_input_raw').fadeIn();
+		$('#response_type_control_bar').find('a').removeClass('active');
+		$('.btn_view_raw').addClass('active');
+	}
+	function checkType(){
+		if($('#input_type').val()=='json'){
+			switchResponseToJson();
+		}else{
+			switchResponseToText();
+		}
+	}
+	checkType();
+
+	$('.btn_view_json').click(switchResponseToJson);
+	$('.btn_view_raw').click(switchResponseToText);
+	</script>
 <% end %>
