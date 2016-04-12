@@ -1,0 +1,12 @@
+<%=render :template=>'layouts/message' %>
+
+<%=@task.method%> to "<%=@task.url%>"<br />
+Request (<%=@task.dataType%>)：<br />
+<div style="border:1px solid #CCC; padding:10px; margin:10px; ">
+	<%=@task.data%>
+</div>
+<hr />
+Result (<%=@task.responseType%>)：
+<div style="border:1px solid #CCC; padding:10px; margin:10px; ">
+	<%=@content.force_encoding("UTF-8")%>
+</div>

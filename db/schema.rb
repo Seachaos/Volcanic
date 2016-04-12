@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20160410173928) do
   create_table "data_responses", force: :cascade do |t|
     t.string   "name"
     t.string   "value"
-    t.string   "response"
+    t.text     "response"
     t.string   "response_type"
     t.string   "path"
     t.string   "type"
@@ -39,8 +39,11 @@ ActiveRecord::Schema.define(version: 20160410173928) do
     t.string   "url"
     t.string   "method"
     t.string   "type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "responseType"
+    t.string   "dataType"
+    t.text     "data"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "users", force: :cascade do |t|

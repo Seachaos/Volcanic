@@ -34,15 +34,6 @@ RSpec.describe DataResponse, type: :model do
 		end
 	end
 
-	describe "POST test" do
-		it "shoud get json" do
-			url = 'http://www.myandroid.tw/test/post.php'
-			data = { 'aa':'bb', 'cc':'dd'}
-			resp = DataResponse.postGetJson(url,data)
-			expect(resp).not_to be false
-		end
-	end
-
 	describe "Export/Import" do
 		before(:each) do
 			for i in 0...10

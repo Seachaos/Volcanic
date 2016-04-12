@@ -1,0 +1,40 @@
+<%=render :template=>'layouts/message' %>
+<h1><%=flash[:title]%></h1>
+<%=form_for @data, :url=>{ :action =>'create' } do |f| %>
+	<% if @data.id then %>
+		<input type="hidden" name="id" value="<%=@data.id%>" />
+	<% end %>
+	<div className="form-group" >
+		<%= f.label :name, "Name" %>
+	    <%= f.text_field :name, class: 'form-control' %>
+	</div>
+
+	<div className="form-group" >
+		<%= f.label :url, "URL" %>
+	    <%= f.text_field :url, class: 'form-control' %>
+	</div>
+
+	<div className="form-group" >
+		<%= f.label :method, "Method" %>
+	    <%= f.text_field :method, class: 'form-control' %>
+	</div>
+
+	<div className="form-group" >
+		<%= f.label :dataType, "Data Type (Request)" %>
+	    <%= f.text_field :dataType, class: 'form-control' %>
+	</div>
+
+	<div className="form-group" >
+		<%= f.label :responseType, "Data Type (Response)" %>
+	    <%= f.text_field :responseType, class: 'form-control' %>
+	</div>
+
+	(IN DEV, use json string only)
+	<div className="form-group" id="response_input_raw"  >
+		<%= f.label :data, "Response" %>
+	    <%= f.text_area :data, :id=>'input_raw',  class: 'form-control', rows:6 %>
+	</div>
+
+	<%=submit_tag 'Submit' %>
+	
+<% end %>

@@ -1,4 +1,21 @@
 <a href="<%=url_for controller:'api_request', action:'create' %>" class="btn btn-default" >Create Request</a>
 
 <div id="ListView" style="margin-top:50px;">
+<table class="table" >
+	<% @datas.each do |row| %>
+	<tr>
+		<td><%=row.id%></td>
+		<td><%=row.name%></td>
+		<td >
+			<div class="btn-group" >
+				<a href="<%=url_for :action=>:make_request, :id=>row.id %>" class="btn btn-default" >Make Request</a>
+				<a href="" class="btn btn-default" disabled="disabled" >Edit</a>
+				<a href="" class="btn btn-default" disabled="disabled" >Copy</a>
+				<a href="" class="btn btn-default" disabled="disabled" >View Logs</a>
+				<a href="" class="btn btn-default" disabled="disabled" >Delete</a>
+			</div>
+		</td>
+	</tr>
+	<% end %>
+</table>
 </div>

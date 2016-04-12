@@ -5,7 +5,9 @@ class CreateRequestTasks < ActiveRecord::Migration
       t.string :url
       t.string :method
       t.string :type
-
+      t.string :responseType
+      t.string :dataType
+      t.text :data
       t.timestamps null: false
     end
   end
