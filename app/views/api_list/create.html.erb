@@ -40,12 +40,46 @@
 				json : this.props.json
 			};
 		},
-		render: function(){
-			var createBtn = React.createElement('a', { className:'btn btn-default'}, 'Create');
-			if(Object.keys(this.state.json).length === 0){
-				return React.createElement('div', {}, "It's no data", br(), createBtn);
+		showJsonContent : function(json){
+			var type = Object.prototype.toString.call(json);
+
+			var resp = [];
+			if(type==='[object Array]'){
+				for(i in json){
+					var value = json[i];
+					if(resp.length>0){
+						resp.push(", ");
+					}
+					resp.push(React.createElement('span', {}, this.showJsonContent(value)));
+				}
+				return React.createElement('span', {}, resp);
+			}else if(type==='[object Object]'){
+				for(key in json){
+					var value = json[key];
+					resp.push(React.createElement('div', {},
+						key,
+						" : ",
+						React.createElement('span', {}, this.showJsonContent(value))
+						));
+				}
+				return React.createElement('div', {}, resp);
+			}else{
+				return React.createElement('span',{}, json);
 			}
-			return React.createElement('div', {}, br(), createBtn);
+		},
+		render: function(){
+			var createObjectBtn = React.createElement('a', { className:'btn btn-default'}, 'Create Object');
+			var createArrayBtn = React.createElement('a', { className:'btn btn-default'}, 'Create Array');
+
+			var createBtnGroup = React.createElement('div', {className:'btn-group' }, createObjectBtn, createArrayBtn);
+
+			if(Object.keys(this.state.json).length === 0){
+				return React.createElement('div', {}, "It's no data", br(), createBtnGroup);
+			}
+			return React.createElement('div', {},
+				this.showJsonContent(this.state.json),
+				createBtnGroup
+				);
 		}
 	});
 	</script>
