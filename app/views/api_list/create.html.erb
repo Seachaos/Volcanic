@@ -40,31 +40,64 @@
 				json : this.props.json
 			};
 		},
-		showJsonContent : function(json){
+		showJsonContent : function(json, prefix_key){
 			var type = Object.prototype.toString.call(json);
 
 			var resp = [];
 			if(type==='[object Array]'){
 				for(i in json){
-					var value = json[i];
-					if(resp.length>0){
-						resp.push(", ");
+					var rkey = prefix_key + '_a' + i;
+					var data = this.showJsonContent(json[i], rkey +'_sub_');
+					var content = data.content;
+					var type = data.type;
+					switch(data.type){
+						case 'raw':
+							if(resp.length<1){
+								break;
+							}
+							console.log(content);
+							resp.push(", ");
+							break;
 					}
-					resp.push(React.createElement('span', {}, this.showJsonContent(value)));
+					var react = React.createElement('span', { key : rkey, type:type }, content);
+					resp.push(react);
 				}
-				return React.createElement('span', {}, resp);
+				return {
+					type : 'array',
+					content : React.createElement('span', {}, resp)
+				};
 			}else if(type==='[object Object]'){
 				for(key in json){
+					var rkey = prefix_key + '_o' + key;
 					var value = json[key];
-					resp.push(React.createElement('div', {},
+					var data = this.showJsonContent(value, rkey + '_sub_' );
+					var content = data.content;
+					var type = data.type;
+					switch(type){
+						case 'array':
+							content = React.createElement('span', {}, "[ ", content, " ]");
+							break;
+						default:
+							content = React.createElement('span', {}, content);
+							break;
+					}
+					resp.push(React.createElement('div', { className: "json_object", key:rkey},
+						"{ ",
 						key,
 						" : ",
-						React.createElement('span', {}, this.showJsonContent(value))
+						content,
+						" }"
 						));
 				}
-				return React.createElement('div', {}, resp);
+				return {
+					type : 'object',
+					content : React.createElement('div', {}, resp)
+				};
 			}else{
-				return React.createElement('span',{}, json);
+				return {
+					type : 'raw',
+					content : React.createElement('span',{}, json)
+				};
 			}
 		},
 		render: function(){
@@ -72,12 +105,23 @@
 			var createArrayBtn = React.createElement('a', { className:'btn btn-default'}, 'Create Array');
 
 			var createBtnGroup = React.createElement('div', {className:'btn-group' }, createObjectBtn, createArrayBtn);
+			createBtnGroup = false; // TODO
 
 			if(Object.keys(this.state.json).length === 0){
 				return React.createElement('div', {}, "It's no data", br(), createBtnGroup);
 			}
+			var data = this.showJsonContent(this.state.json, 'top');
+			var content = data.content;
+			switch(data.type){
+				case 'object':
+					content = React.createElement('span', {}, "{ ", content, " }", br());
+					break;
+				case 'array':
+					content = React.createElement('span', {}, "[ ", content, " ]", br());
+					break;
+			}
 			return React.createElement('div', {},
-				this.showJsonContent(this.state.json),
+				content,
 				createBtnGroup
 				);
 		}
