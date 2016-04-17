@@ -18,4 +18,8 @@
 //= require react_ujs
 ////  -= require components
 
+
+//= require bootstrap-modal
+//= require bootstrap-modalmanager
+
 //= require_tree .

@@ -19,7 +19,6 @@ ActiveRecord::Schema.define(version: 20160410173928) do
     t.text     "response"
     t.string   "response_type"
     t.string   "path"
-    t.string   "type"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
   end

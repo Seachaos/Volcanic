@@ -6,7 +6,6 @@ class CreateDataResponses < ActiveRecord::Migration
       t.text :response
       t.string :response_type
       t.string :path
-      t.string :type
       t.timestamps null: false
     end
   end

@@ -4,7 +4,7 @@ class DataResponse < ActiveRecord::Base
 	validates_uniqueness_of :path
 
 	def self.fromParams(data)
-		data.permit(:name, :path, :response)
+		data.permit(:name, :path, :response, :response_type)
 	end
 
 	def self.import(datas)

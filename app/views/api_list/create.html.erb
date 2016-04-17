@@ -26,28 +26,122 @@
 	    <%= f.text_area :response, :id=>'input_raw',  class: 'form-control', rows:6 %>
 	</div>
 	<div id="react_json_content" ></div>
-	<%=f.hidden_field :type, :id=>'input_type' %>
+	<%=f.hidden_field :response_type, :id=>'input_type' %>
 	<br />
 	<%=submit_tag 'Submit' %>
 
+
+	<!-- Modal -->
+	<div class="modal fade" id="modify_json_value" role="dialog" aria-labelledby="modify_json_value_label">
+		<div class="modal-dialog" role="document">
+		  <!-- Modal content-->
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      <h4 class="modal-title" id="modify_json_value_label" >Modal Header</h4>
+		    </div>
+		    <div class="modal-body">
+		      <p>Some text in the modal.</p>
+		      <input type="text" id="modify_json_value_input" name="modify_json_value_input" />
+		    </div>
+		    <div class="modal-footer">
+		      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		      <button type="button" id="modify_json_value_ok" class="btn btn-default" data-dismiss="modal">OK</button>
+		    </div>
+		  </div>
+		</div>
+	</div>
+	<!-- scripts -->
+
 	<script type="text/javascript">
+
+	var modal_json_value_ok = null;
 	function br(){
 		return React.createElement('br');
 	}
+
+	function showEditorDialog(arg){
+		var modal = $('#modify_json_value');
+		modal.modal('show');
+		modal.find('#modify_json_value_label').html('Modify Value');
+		modal.find('#modify_json_value_input').val(arg.value);
+		modal.find('.modal-body').find('p').html('Input new Value');
+		modal_json_value_ok = arg;
+	}
+	$('#modify_json_value_ok').click(function(){
+		var arg = modal_json_value_ok;
+		arg.onNewValue($('#modify_json_value_input').val());
+	})
+
+	function getJsonValueFromPath(json, path){
+		var arg = path.split('/');
+		var target = json;
+		for(i in arg){
+			var k = arg[i];
+			if(k){
+				target = target[k];
+			}
+		}
+		return target;
+	}
+	function setJsonValueFromPath(json, path, value){
+		var arg = path.split('/');
+		var target = json;
+		for(i in arg){
+			var k = arg[i];
+			if(!k){
+				continue;
+			}
+			if(i<arg.length-2){
+				target = target[k];
+				continue
+			}
+			target[k] = value;
+		}
+	}
+
+	function warpTypeName(data){
+		switch(typeof(data)){
+			case 'string':
+				return '"' + data + '"';
+				break;
+			default:
+				return data;
+		}
+	}
+	
 	var JSONViewer = React.createClass({
 		getInitialState : function(){
 			return {
 				json : this.props.json
 			};
 		},
-		showJsonContent : function(json, prefix_key){
-			var type = Object.prototype.toString.call(json);
+		handleRawValueClick : function(path){
+			var json = this.state.json;
+			var value = getJsonValueFromPath(json , path);
 
+			showEditorDialog({
+				value : value,
+				onNewValue : function(newValue){
+					setJsonValueFromPath(json , path, newValue);
+					this.setState({json:json});
+				}.bind(this)
+			})
+		},
+		/*
+			arg :
+				json : data content ,
+				prefix_key : for reacy key id prefix, 
+				path : json object path(for modify data)
+		*/
+		showJsonContent : function(json, prefix_key, path){
+			var type = Object.prototype.toString.call(json);
+			var path = path || "";
 			var resp = [];
 			if(type==='[object Array]'){
 				for(i in json){
 					var rkey = prefix_key + '_a' + i;
-					var data = this.showJsonContent(json[i], rkey +'_sub_');
+					var data = this.showJsonContent(json[i], rkey +'_sub_', path + i + "/" );
 					var content = data.content;
 					var type = data.type;
 					switch(data.type){
@@ -55,7 +149,6 @@
 							if(resp.length<1){
 								break;
 							}
-							console.log(content);
 							resp.push(", ");
 							break;
 					}
@@ -70,9 +163,13 @@
 				for(key in json){
 					var rkey = prefix_key + '_o' + key;
 					var value = json[key];
-					var data = this.showJsonContent(value, rkey + '_sub_' );
+
+					// get content
+					var data = this.showJsonContent(value, rkey + '_sub_', path + key + "/" );
 					var content = data.content;
 					var type = data.type;
+
+					// check content type, and append type symbol
 					switch(type){
 						case 'array':
 							content = React.createElement('span', {}, "[ ", content, " ]");
@@ -83,7 +180,7 @@
 					}
 					resp.push(React.createElement('div', { className: "json_object", key:rkey},
 						"{ ",
-						key,
+						warpTypeName(key),
 						" : ",
 						content,
 						" }"
@@ -94,11 +191,15 @@
 					content : React.createElement('div', {}, resp)
 				};
 			}else{
+				var data = warpTypeName(json);
 				return {
 					type : 'raw',
-					content : React.createElement('span',{}, json)
+					content : React.createElement('span',{ path : path, className:'json_raw', onClick : this.handleRawValueClick.bind(this, path) }, data)
 				};
 			}
+		},
+		onJsonDataHasChange : function(){
+			$('#input_raw').val(JSON.stringify(this.state.json));
 		},
 		render: function(){
 			var createObjectBtn = React.createElement('a', { className:'btn btn-default'}, 'Create Object');
@@ -110,6 +211,7 @@
 			if(Object.keys(this.state.json).length === 0){
 				return React.createElement('div', {}, "It's no data", br(), createBtnGroup);
 			}
+			this.onJsonDataHasChange();
 			var data = this.showJsonContent(this.state.json, 'top');
 			var content = data.content;
 			switch(data.type){
@@ -127,6 +229,7 @@
 		}
 	});
 	</script>
+
 	<script type="text/javascript">
 	function isResponseIsJSON(){
 		var val = $('#input_raw').val();
@@ -154,14 +257,18 @@
 		// render in react
 		$('#react_json_content').empty();
 		$('#react_json_content').fadeIn();
+
+		// render json viewer
 		var rdom = React.createElement(JSONViewer, {json: json});
 		ReactDOM.render(rdom, $('#react_json_content')[0]);
+		$('#input_type').val('json');
 	}
 	function switchResponseToText(){
 		$('#react_json_content').fadeOut();
 		$('#response_input_raw').fadeIn();
 		$('#response_type_control_bar').find('a').removeClass('active');
 		$('.btn_view_raw').addClass('active');
+		$('#input_type').val('text');
 	}
 	function checkType(){
 		if($('#input_type').val()=='json'){
