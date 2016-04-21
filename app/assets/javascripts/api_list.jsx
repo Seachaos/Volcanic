@@ -1,5 +1,6 @@
 
 
+
 var ApiListActionButton = React.createClass({
 	render: function(){
 		var name = 'View';
@@ -46,3 +47,9 @@ var ApiListTableView = React.createClass({
 		</table>)
 	}
 })
+
+var ApiResponseReplacementEditor = React.createClass({
+	render: function(){
+		return (<h1>Working</h1>);
+	}
+});

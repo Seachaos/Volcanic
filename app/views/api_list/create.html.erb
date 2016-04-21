@@ -14,6 +14,7 @@
 	    <%= f.text_field :path, class: 'form-control' %>
 	</div>
 
+	<h4>Response Content</h4>
 	<div id="response_type_control_bar"style="margin:10px;" >
 		Data Type：
 		<span  class="btn-group" role="group" >
@@ -26,6 +27,11 @@
 	    <%= f.text_area :response, :id=>'input_raw',  class: 'form-control', rows:6 %>
 	</div>
 	<div id="react_json_content" ></div>
+
+	<h4>Replacement</h4>
+	<div id="replacement_dom" >
+
+	</div>
 	<%=f.hidden_field :response_type, :id=>'input_type' %>
 	<br />
 	<%=submit_tag 'Submit' %>
@@ -281,5 +287,7 @@
 
 	$('.btn_view_json').click(switchResponseToJson);
 	$('.btn_view_raw').click(switchResponseToText);
+
+	ReactDOM.render(React.createElement(ApiResponseReplacementEditor), $('#replacement_dom')[0]);
 	</script>
 <% end %>
