@@ -8,5 +8,5 @@ Request (<%=@task.dataType%>)：<br />
 <hr />
 Result (<%=@task.responseType%>)：
 <div style="border:1px solid #CCC; padding:10px; margin:10px; ">
-	<%=@content.force_encoding("UTF-8")%>
+	<%=@content.to_s.force_encoding("UTF-8")%>
 </div>

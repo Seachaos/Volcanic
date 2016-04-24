@@ -48,8 +48,77 @@ var ApiListTableView = React.createClass({
 	}
 })
 
+// --------- ApiResponseReplacement ----------
+var ApiResponseReplacementCreateRule = React.createClass({
+	render : function(){
+		return (<a className="btn btn-default" onClick={this.props.onClick} >Create New Rule</a>);
+	}
+});
+var ApiResponseReplacementSelectBox = React.createClass({
+	render : function(){
+		var options = [];
+		var name = this.props.name;
+		for(i in this.props.options){
+			var key = i, value = this.props.options[i];
+			var rkey = name +'_'+key;
+			options.push((<option value={key} key={rkey} >{value}</option>));
+		}
+		return (<span>
+			<select className="" name={name} >{options}</select>
+		</span>)
+	}
+});
+var ApiResponseReplacementRuleView = React.createClass({
+	render : function(){
+		return (<div>
+				<ApiResponseReplacementSelectBox name="if" options={{
+					"if":"If",
+					"not_if":"Not If"
+				}} />
+				Params( <input type="text" value="name" /> )
+				<ApiResponseReplacementSelectBox name="if" options={{
+					"contain":"contain",
+					"prefix":"prefix",
+					"suffix":"suffix"
+				}} />
+				<input type="text" value="value" />
+				then
+				<ApiResponseReplacementSelectBox name="if" options={{
+					"relace":"relace",
+					"delete":"delete",
+					"add":"add"
+				}} />
+				response variable 
+				<input type="text" value="response_name" /> and value is
+				<input type="text" value="response_value" />
+			</div>)
+	}
+});
 var ApiResponseReplacementEditor = React.createClass({
+	getInitialState : function(){
+		return {
+			rules : {}
+		};
+	},
+	handleClickCreateNewRule : function(){
+		var rules = this.state.rules;
+		rules[uuid()] = {};
+		this.setState({
+			rules : rules
+		});
+	},
 	render: function(){
-		return (<h1>Working</h1>);
+		var ruleViews = []
+		for(i in this.state.rules){
+			var rule = this.state.rules[i];
+			ruleViews.push(React.createElement(ApiResponseReplacementRuleView, {
+				key : i,
+				rule : rule
+			}))
+		}
+		return (<div>
+			{ruleViews}
+			<ApiResponseReplacementCreateRule onClick={this.handleClickCreateNewRule} />
+		</div>);
 	}
 });
